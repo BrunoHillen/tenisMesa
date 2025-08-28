@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏓 Campeonato Tênis de Mesa</title>
+    <meta name="theme-color" content="#3498db">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Tênis Mesa">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ2FtcGVvbmF0byBUw6puaXMgZGUgTWVzYSIsInNob3J0X25hbWUiOiJUw6puaXMgTWVzYSIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwic3RhcnRfdXJsIjoiLiIsInRoZW1lX2NvbG9yIjoiIzM0OThkYiIsImJhY2tncm91bmRfY29sb3IiOiIjZmZmZmZmIn0=">
+   
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+       
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+       
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            background: white;
+            position: relative;
+        }
+       
+        .header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+       
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+       
+        .header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+       
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            overflow-x: auto;
+        }
+       
+        .nav-tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 10px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+       
+        .nav-tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+            background: white;
+        }
+       
+        .nav-tab:not(.active):hover {
+            background: #e9ecef;
+        }
+       
+        .tab-content {
+            display: none;
+            padding: 20px 15px;
+            min-height: calc(100vh - 140px);
+        }
+       
+        .tab-content.active {
+            display: block;
+        }
+       
+        .section {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+       
+        .section-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+       
+        .section-body {
+            padding: 20px;
+        }
+       
+        .player-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+       
+        .player-input {
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+       
+        .player-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+       
+        .match-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 15px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+       
+        .match-card:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+       
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+       
+        .vs-text {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-weight: 500;
+        }
+       
+        .result-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+       
+        .result-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+       
+        .result-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+       
+        .result-input.valid {
+            border-color: #27ae60;
+            background-color: #d5f4e6;
+        }
+       
+        .result-input.invalid {
+            border-color: #e74c3c;
+            background-color: #fadbd8;
+        }
+       
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin: 10px 0;
+        }
+       
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+       
+        .btn:active {
+            transform: translateY(0);
+        }
+       
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #219a52);
+        }
+       
+        .btn-success:hover {
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+       
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+       
+        .btn-danger:hover {
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+       
+        .classification-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+       
+        .classification-table th {
+            background: linear-gradient(135deg, #27ae60, #219a52);
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+       
+        .classification-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+        }
+       
+        .classification-table tr:hover {
+            background-color: #f8f9fa;
+        }
+       
+        .rank-1 {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            font-weight: bold;
+        }
+       
+        .rank-1:hover {
+            background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+        }
+       
+        .rank-2, .rank-3 {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+            font-weight: bold;
+        }
+       
+        .rank-2:hover, .rank-3:hover {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d) !important;
+        }
+       
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+       
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+       
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+       
+        .stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+       
+        .alert {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+       
+        .alert-info {
+            background: #cce7ff;
+            border-color: #99d3ff;
+            color: #004085;
+        }
+       
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #ffecb3;
+            color: #856404;
+        }
+       
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+       
+        .progress-fill {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+       
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+       
+        .floating-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.5);
+        }
+       
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+        }
+       
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+       
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+       
+        .modal h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+       
+        /* Responsividade para telas muito pequenas */
+        @media (max-width: 360px) {
+            .player-input-grid {
+                grid-template-columns: 1fr;
+            }
+           
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+           
+            .match-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+       
+        /* Scroll suave para iOS */
+        * {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>🏓 Campeonato Tênis de Mesa</h1>
+            <div class="subtitle">Sistema de controle completo</div>
+        </div>
+       
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('jogadores')">👥 Jogadores</button>
+            <button class="nav-tab" onclick="showTab('partidas')">🏓 Partidas</button>
+            <button class="nav-tab" onclick="showTab('classificacao')">🏆 Ranking</button>
+            <button class="nav-tab" onclick="showTab('config')">⚙️ Config</button>
+        </div>
+       
+        <!-- Tab Jogadores -->
+        <div id="jogadores" class="tab-content active">
+            <div class="section">
+                <div class="section-header">
+                    👥 Nomes dos Jogadores
+                </div>
+                <div class="section-body">
+                    <div class="alert alert-info">
+                        <strong>💡 Dica:</strong> Digite os nomes dos 10 jogadores. Os dados são salvos automaticamente no seu celular!
+                    </div>
+                    <div class="player-input-grid" id="playerInputs">
+                        <!-- Inputs serão gerados dinamicamente -->
+                    </div>
+                    <button class="btn btn-success" onclick="savePlayerNames()">💾 Salvar Nomes</button>
+                </div>
+            </div>
+        </div>
+       
+        <!-- Tab Partidas -->
+        <div id="partidas" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    🏓 Registro de Partidas
+                </div>
+                <div class="section-body">
+                    <div class="alert alert-info">
+                        <strong>📝 Como registrar:</strong> Digite o resultado no formato "3-1", "3-0", "3-2", etc. O primeiro número são os sets do jogador da esquerda.
+                    </div>
+                   
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="matchesCompleted">0</div>
+                            <div class="stat-label">PARTIDAS JOGADAS</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="matchesRemaining">45</div>
+                            <div class="stat-label">PARTIDAS RESTANTES</div>
+                        </div>
+                    </div>
+                   
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                   
+                    <div id="matchesList">
+                        <!-- Partidas serão geradas dinamicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <!-- Tab Classificação -->
+        <div id="classificacao" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    🏆 Classificação Final
+                </div>
+                <div class="section-body">
+                    <div class="alert">
+                        <strong>🥇 Critérios de Desempate:</strong><br>
+                        1º Maior número de vitórias<br>
+                        2º Maior número de sets ganhos<br>
+                        3º Melhor saldo de sets
+                    </div>
+                   
+                    <table class="classification-table">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Jogador</th>
+                                <th>V</th>
+                                <th>D</th>
+                                <th>SG</th>
+                                <th>SP</th>
+                                <th>Saldo</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody id="classificationTableBody">
+                            <!-- Classificação será gerada dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+       
+        <!-- Tab Configurações -->
+        <div id="config" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    ⚙️ Configurações do Campeonato
+                </div>
+                <div class="section-body">
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Atenção:</strong> Estas ações não podem ser desfeitas!
+                    </div>
+                   
+                    <button class="btn btn-success" onclick="exportData()">📤 Exportar Dados</button>
+                    <button class="btn btn-success" onclick="document.getElementById('importFile').click()">📥 Importar Dados</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+                   
+                    <button class="btn btn-danger" onclick="resetAllData()">🗑️ Limpar Todos os Dados</button>
+                   
+                    <div class="stats-grid" style="margin-top: 30px;">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalMatches">45</div>
+                            <div class="stat-label">TOTAL DE PARTIDAS</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="dataSize">0 KB</div>
+                            <div class="stat-label">DADOS SALVOS</div>
+                        </div>
+                    </div>
+                   
+                    <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 12px; color: #666;">
+                        <strong>📱 Sobre este App:</strong><br>
+                        • Todos os dados são salvos localmente no seu celular<br>
+                        • Funciona offline após o primeiro carregamento<br>
+                        • Compatible com todos os navegadores móveis<br>
+                        • Versão 2.0 - Atualizado em 2025
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <!-- Modal -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h3 id="modalTitle">Confirmação</h3>
+                <p id="modalMessage">Tem certeza que deseja continuar?</p>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn" onclick="closeModal()">Cancelar</button>
+                    <button class="btn btn-danger" id="modalConfirmBtn" onclick="confirmAction()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+       
+        <!-- Floating Action Button -->
+        <button class="floating-action" onclick="calculateClassification()" title="Atualizar classificação">
+            📊
+        </button>
+    </div>
+
+    <script>
+        // Estado global da aplicação
+        let appData = {
+            players: [],
+            matches: {},
+            lastUpdate: Date.now()
+        };
+       
+        let pendingAction = null;
+       
+        // Inicializar aplicação
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDataFromStorage();
+            initializeApp();
+           
+            // Service Worker para funcionamento offline
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('data:text/javascript,self.addEventListener("fetch", e => e.respondWith(fetch(e.request)));')
+                .catch(() => {}); // Ignore errors
+            }
+        });
+       
+        // Inicializar componentes da aplicação
+        function initializeApp() {
+            generatePlayerInputs();
+            generateMatchesList();
+            calculateClassification();
+            updateStats();
+           
+            // Auto-save a cada mudança
+            setInterval(saveDataToStorage, 5000); // Salva a cada 5 segundos
+        }
+       
+        // Gerar inputs dos jogadores
+        function generatePlayerInputs() {
+            const container = document.getElementById('playerInputs');
+            container.innerHTML = '';
+           
+            for (let i = 0; i < 10; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'player-input';
+                input.placeholder = `Jogador ${i + 1}`;
+                input.value = appData.players[i] || `Jogador ${i + 1}`;
+                input.oninput = function() {
+                    appData.players[i] = this.value;
+                    saveDataToStorage();
+                    updatePlayerNamesInMatches();
+                };
+                container.appendChild(input);
+            }
+        }
+       
+        // Gerar lista de partidas
+        function generateMatchesList() {
+            const container = document.getElementById('matchesList');
+            container.innerHTML = '';
+           
+            for (let i = 0; i < 10; i++) {
+                for (let j = i + 1; j < 10; j++) {
+                    const matchCard = document.createElement('div');
+                    matchCard.className = 'match-card';
+                   
+                    const player1 = appData.players[i] || `Jogador ${i + 1}`;
+                    const player2 = appData.players[j] || `Jogador ${j + 1}`;
+                    const matchKey = `${i}-${j}`;
+                   
+                    matchCard.innerHTML = `
+                        <div class="match-header">
+                            <span>${player1}</span>
+                            <span class="vs-text">VS</span>
+                            <span>${player2}</span>
+                        </div>
+                        <div class="result-input-container">
+                            <input type="text"
+                                   class="result-input"
+                                   id="match-${matchKey}"
+                                   placeholder="Ex: 3-1"
+                                   value="${appData.matches[matchKey] || ''}"
+                                   oninput="validateAndSaveMatch('${matchKey}', this.value)">
+                        </div>
+                    `;
+                   
+                    container.appendChild(matchCard);
+                }
+            }
+        }
+       
+        // Atualizar nomes dos jogadores nas partidas
+        function updatePlayerNamesInMatches() {
+            generateMatchesList();
+        }
+       
+        // Validar e salvar resultado da partida
+        function validateAndSaveMatch(matchKey, value) {
+            const input = document.getElementById(`match-${matchKey}`);
+            const isValid = /^\d+-\d+$/.test(value) && value !== '';
+           
+            input.className = `result-input ${isValid ? 'valid' : (value ? 'invalid' : '')}`;
+           
+            if (isValid || value === '') {
+                appData.matches[matchKey] = value;
+                appData.lastUpdate = Date.now();
+                saveDataToStorage();
+                updateStats();
+               
+                // Auto-calcular classificação se houver resultados válidos
+                if (Object.values(appData.matches).some(match => match && /^\d+-\d+$/.test(match))) {
+                    calculateClassification();
+                }
+            }
+        }
+       
+        // Calcular classificação
+        function calculateClassification() {
+            const classification = [];
+           
+            for (let i = 0; i < 10; i++) {
+                const player = {
+                    name: appData.players[i] || `Jogador ${i + 1}`,
+                    index: i,
+                    wins: 0,
+                    losses: 0,
+                    setsWon: 0,
+                    setsLost: 0,
+                    saldo: 0,
+                    percentage: 0
+                };
+               
+                // Analisar todas as partidas do jogador
+                for (let j = 0; j < 10; j++) {
+                    if (i === j) continue;
+                   
+                    const matchKey1 = `${Math.min(i, j)}-${Math.max(i, j)}`;
+                    const matchResult = appData.matches[matchKey1];
+                   
+                    if (matchResult && /^\d+-\d+$/.test(matchResult)) {
+                        const [sets1, sets2] = matchResult.split('-').map(Number);
+                       
+                        let playerSets, opponentSets;
+                        if (i < j) {
+                            playerSets = sets1;
+                            opponentSets = sets2;
+                        } else {
+                            playerSets = sets2;
+                            opponentSets = sets1;
+                        }
+                       
+                        player.setsWon += playerSets;
+                        player.setsLost += opponentSets;
+                       
+                        if (playerSets > opponentSets) {
+                            player.wins++;
+                        } else if (opponentSets > playerSets) {
+                            player.losses++;
+                        }
+                    }
+                }
+               
+                player.saldo = player.setsWon - player.setsLost;
+                const totalGames = player.wins + player.losses;
+                player.percentage = totalGames > 0 ? ((player.wins / totalGames) * 100).toFixed(1) : 0;
+               
+                classification.push(player);
+            }
+           
+            // Ordenar por critérios de desempate
+            classification.sort((a, b) => {
+                if (b.wins !== a.wins) return b.wins - a.wins;
+                if (b.setsWon !== a.setsWon) return b.setsWon - a.setsWon;
+                return b.saldo - a.saldo;
+            });
+           
+            // Exibir classificação
+            const tbody = document.getElementById('classificationTableBody');
+            tbody.innerHTML = '';
+           
+            classification.forEach((player, position) => {
+                const row = document.createElement('tr');
+                let rowClass = '';
+               
+                if (position === 0) rowClass = 'rank-1';
+                else if (position === 1) rowClass = 'rank-2';
+                else if (position === 2) rowClass = 'rank-3';
+               
+                row.className = rowClass;
+                row.innerHTML = `
+                    <td>${position + 1}º</td>
+                    <td style="text-align: left; font-weight: 600;">${player.name}</td>
+                    <td>${player.wins}</td>
+                    <td>${player.losses}</td>
+                    <td>${player.setsWon}</td>
+                    <td>${player.setsLost}</td>
+                    <td>${player.saldo >= 0 ? '+' : ''}${player.saldo}</td>
+                    <td>${player.percentage}%</td>
+                `;
+               
+                tbody.appendChild(row);
+            });
+        }
+       
+        // Atualizar estatísticas
+        function updateStats() {
+            const totalMatches = 45;
+            const completedMatches = Object.values(appData.matches).filter(match =>
+                match && /^\d+-\d+$/.test(match)
+            ).length;
+            const remainingMatches = totalMatches - completedMatches;
+            const progress = (completedMatches / totalMatches) * 100;
+           
+            document.getElementById('matchesCompleted').textContent = completedMatches;
+            document.getElementById('matchesRemaining').textContent = remainingMatches;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('totalMatches').textContent = totalMatches;
+           
+            // Calcular tamanho dos dados
+            const dataString = JSON.stringify(appData);
+            const dataSize = Math.round(dataString.length / 1024 * 100) / 100;
+            document.getElementById('dataSize').textContent = `${dataSize} KB`;
+        }
+       
+        // Salvar nomes dos jogadores
+        function savePlayerNames() {
+            const inputs = document.querySelectorAll('.player-input');
+            inputs.forEach((input, index) => {
+                appData.players[index] = input.value || `Jogador ${index + 1}`;
+            });
+           
+            appData.lastUpdate = Date.now();
+            saveDataToStorage();
+            updatePlayerNamesInMatches();
+            calculateClassification();
+           
+            showToast('✅ Nomes salvos com sucesso!');
+        }
+       
+        // Navegação entre tabs
+        function showTab(tabName) {
+            // Remover classe active de todas as tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+           
+            // Ativar tab selecionada
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+           
+            // Atualizar dados se necessário
+            if (tabName === 'classificacao') {
+                calculateClassification();
+            } else if (tabName === 'config') {
+                updateStats();
+            }
+        }
+       
+        // Salvar dados no armazenamento local
+        function saveDataToStorage() {
+            try {
+                const dataString = JSON.stringify(appData);
+                localStorage.setItem('tenisMesaCampeonato', dataString);
+            } catch (error) {
+                console.error('Erro ao salvar dados:', error);
+            }
+        }
+       
+        // Carregar dados do armazenamento local
+        function loadDataFromStorage() {
+            try {
+                const savedData = localStorage.getItem('tenisMesaCampeonato');
+                if (savedData) {
+                    const parsedData = JSON.parse(savedData);
+                    appData = {
+                        players: parsedData.players || [],
+                        matches: parsedData.matches || {},
+                        lastUpdate: parsedData.lastUpdate || Date.now()
+                    };
+                } else {
+                    // Dados padrão
+                    appData = {
+                        players: Array(10).fill(0).map((_, i) => `Jogador ${i + 1}`),
+                        matches: {},
+                        lastUpdate: Date.now()
+                    };
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                appData = {
+                    players: Array(10).fill(0).map((_, i) => `Jogador ${i + 1}`),
+                    matches: {},
+                    lastUpdate: Date.now()
+                };
+            }
+        }
+       
+        // Exportar dados
+        function exportData() {
+            const dataString = JSON.stringify(appData, null, 2);
+            const blob = new Blob([dataString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+           
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `campeonato-tenis-mesa-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+           
+            showToast('📤 Dados exportados com sucesso!');
+        }
+       
+        // Importar dados
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+           
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                   
+                    // Validar estrutura dos dados
+                    if (importedData.players && importedData.matches) {
+                        appData = {
+                            players: importedData.players || [],
+                            matches: importedData.matches || {},
+                            lastUpdate: Date.now()
+                        };
+                       
+                        saveDataToStorage();
+                        initializeApp();
+                        showToast('📥 Dados importados com sucesso!');
+                    } else {
+                        throw new Error('Formato de arquivo inválido');
+                    }
+                } catch (error) {
+                    showToast('❌ Erro ao importar dados. Verifique o arquivo.', 'error');
+                }
+            };
+            reader.readAsText(file);
+           
+            // Limpar input
+            event.target.value = '';
+        }
+       
+        // Reset todos os dados
+        function resetAllData() {
+            showModal(
+                '🗑️ Limpar Todos os Dados',
+                'Esta ação irá apagar permanentemente todos os jogadores, partidas e classificações. Esta ação não pode ser desfeita!',
+                function() {
+                    appData = {
+                        players: Array(10).fill(0).map((_, i) => `Jogador ${i + 1}`),
+                        matches: {},
+                        lastUpdate: Date.now()
+                    };
+                   
+                    saveDataToStorage();
+                    initializeApp();
+                    showToast('🗑️ Todos os dados foram limpos!');
+                }
+            );
+        }
+       
+        // Sistema de modal
+        function showModal(title, message, confirmCallback) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modal').classList.add('active');
+            pendingAction = confirmCallback;
+        }
+       
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            pendingAction = null;
+        }
+       
+        function confirmAction() {
+            if (pendingAction) {
+                pendingAction();
+                pendingAction = null;
+            }
+            closeModal();
+        }
+       
+        // Sistema de toast (notificações)
+        function showToast(message, type = 'success') {
+            // Criar elemento de toast
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 90px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'error' ? '#e74c3c' : '#27ae60'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-size: 14px;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                animation: slideInFromTop 0.3s ease-out forwards;
+            `;
+            toast.textContent = message;
+           
+            // Adicionar animação CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInFromTop {
+                    from {
+                        transform: translateX(-50%) translateY(-100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(-50%) translateY(0);
+                        opacity: 1;
+                    }
+                }
+                @keyframes slideOutToTop {
+                    from {
+                        transform: translateX(-50%) translateY(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(-50%) translateY(-100%);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+           
+            document.body.appendChild(toast);
+           
+            // Remover toast após 3 segundos
+            setTimeout(() => {
+                toast.style.animation = 'slideOutToTop 0.3s ease-in forwards';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                    if (document.head.contains(style)) {
+                        document.head.removeChild(style);
+                    }
+                }, 300);
+            }, 3000);
+        }
+       
+        // Detectar se é instalável como PWA
+        let deferredPrompt;
+       
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+           
+            // Mostrar botão de instalação
+            const installButton = document.createElement('button');
+            installButton.className = 'btn btn-success';
+            installButton.innerHTML = '📱 Instalar App';
+            installButton.onclick = installApp;
+           
+            const configSection = document.querySelector('#config .section-body');
+            configSection.insertBefore(installButton, configSection.firstChild);
+        });
+       
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((result) => {
+                    if (result.outcome === 'accepted') {
+                        showToast('📱 App instalado com sucesso!');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+       
+        // Detectar mudanças na conectividade
+        window.addEventListener('online', () => {
+            showToast('🌐 Conectado à internet');
+        });
+       
+        window.addEventListener('offline', () => {
+            showToast('📱 Modo offline - dados salvos localmente', 'warning');
+        });
+       
+        // Salvar dados automaticamente antes de fechar
+        window.addEventListener('beforeunload', () => {
+            saveDataToStorage();
+        });
+       
+        // Detectar quando o app volta ao foco
+        window.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                // App voltou ao foco - recarregar dados se necessário
+                loadDataFromStorage();
+                updateStats();
+            }
+        });
+       
+        // Gestos touch para navegação
+        let touchStartX = 0;
+        let touchEndX = 0;
+       
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+       
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleGesture();
+        });
+       
+        function handleGesture() {
+            const swipeThreshold = 100;
+            const difference = touchStartX - touchEndX;
+           
+            if (Math.abs(difference) > swipeThreshold) {
+                const currentTab = document.querySelector('.nav-tab.active');
+                const tabs = Array.from(document.querySelectorAll('.nav-tab'));
+                const currentIndex = tabs.indexOf(currentTab);
+               
+                if (difference > 0 && currentIndex < tabs.length - 1) {
+                    // Swipe left - próxima tab
+                    tabs[currentIndex + 1].click();
+                } else if (difference < 0 && currentIndex > 0) {
+                    // Swipe right - tab anterior
+                    tabs[currentIndex - 1].click();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
